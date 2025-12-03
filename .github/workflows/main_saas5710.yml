@@ -1,4 +1,4 @@
-name: Build and deploy Angular app to Azure Web App - saas5710
+name: Build and deploy Angular SSR app to Azure Web App - saas5710
 
 on:
   push:
@@ -13,24 +13,25 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x'   # or whatever you use locally
+          node-version: '20.x'
 
-      - name: Install and build Angular frontend
+      - name: Install and build Angular frontend (SSR)
         working-directory: ./frontend/frontend-app
         run: |
           npm ci
-          npm run build
+          npm run build:ssr
 
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v4
         with:
           name: frontend-app
-          # Upload the whole app folder including package.json, dist/, etc.
+          # ship the whole app folder so Azure sees package.json + dist/
           path: frontend/frontend-app
 
   deploy:
